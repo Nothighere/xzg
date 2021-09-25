@@ -46,6 +46,11 @@ public class UserService {
         return num;
     }
 
+    /**
+     * 查询指定日期参加人数是否超过限制 true:未超过, false:超过
+     * @param signUpDate
+     * @return
+     */
     public boolean isOutOfLimit(String signUpDate){
         boolean flg = false;
         try {
@@ -60,5 +65,20 @@ public class UserService {
             logger.error(e.getMessage());
         }
         return flg;
+    }
+
+    /**
+     * 查询电话号码是否已经注册
+     * @param phoneNum
+     * @return
+     */
+    public int isRegeisted(String phoneNum){
+        int num = 0;
+        try{
+            num = userDao.regeistedCheckByPhoneNum(phoneNum);
+        }catch (Exception e){
+            logger.error("查询电话号码是否注册时出错 cause:"+ e.getMessage());
+        }
+        return num;
     }
 }

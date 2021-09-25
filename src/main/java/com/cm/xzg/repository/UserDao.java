@@ -61,6 +61,22 @@ public class UserDao {
         return signUp;
     }
 
+    /**
+     * 根据电话号码校验用户是否已经注册
+     * @return
+     */
+    public int regeistedCheckByPhoneNum(String phoneNum) throws Exception{
+        String sql = "select count(1) from user where user.phone_number ="+phoneNum;
+        int num = 0;
+        try{
+            num = jdbcTemplate.queryForObject(sql,Integer.class);
+
+        }catch (Exception e){
+            throw new Exception(e);
+        }
+        return num;
+    }
+
 }
 /**
  * 商品数据库访问类

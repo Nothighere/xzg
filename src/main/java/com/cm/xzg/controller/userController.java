@@ -40,6 +40,11 @@ public class userController {
         if (!userService.isOutOfLimit(signUpDateStr)){
             return ResponseEntity.ok().body("选定日期内名额已满！");
         }
+        // 检查报名手机号是否已经报名
+        int res = userService.isRegeisted(user.getPhoneNumber());
+        if (res > 0){
+            return ResponseEntity.ok("该手机号已经报名！");
+        }
         return ResponseEntity.ok().body(userService.add(user));
     }
 
@@ -56,6 +61,13 @@ public class userController {
         return ResponseEntity.ok().body(resList);
     }
 
+//    @PostMapping("/checkByPhone")
+//    @ResponseBody
+//    public ResponseEntity<Integer> checkByPhone(@RequestBody UserDo userDo){
+//
+//        int res = userService.isRegeisted(userDo.getPhoneNumber());
+//        return ResponseEntity.ok(res);
+//    }
 
 
 }

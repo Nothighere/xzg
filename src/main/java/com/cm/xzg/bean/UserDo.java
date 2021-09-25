@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
@@ -28,6 +29,6 @@ public class UserDo {
     private String phoneNumber;
 
     @NotNull(message = "参加时间不能为空")
-    private int regeisteDate;
+    private LocalDateTime regeisteDate;
 
 }

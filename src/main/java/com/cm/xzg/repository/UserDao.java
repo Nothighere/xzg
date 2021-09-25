@@ -2,9 +2,13 @@ package com.cm.xzg.repository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 import com.cm.xzg.bean.UserDo;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Repository
 public class UserDao {
@@ -21,6 +25,40 @@ public class UserDao {
         {
             return error.getMessage();
         }
+    }
+
+
+    /**
+     * 查询所有用户信息
+     * @return
+     */
+    public List<UserDo> getAllUsers() throws Exception {
+        List<UserDo> userList = new ArrayList<>();
+        String sql = "select * from user";
+        try {
+            userList = jdbcTemplate.query(sql, new BeanPropertyRowMapper<>(UserDo.class));
+
+        } catch (Exception error){
+            throw new Exception(error);
+        }
+        return userList;
+    }
+
+    /**
+     * 查询指定日期报名人数
+     * @param signUpDate
+     * @return
+     * @throws Exception
+     */
+    public int getSumOfSignUp(String signUpDate) throws Exception{
+        String sql = "select count(1) from user where DATE_FORMAT(user.regeiste_date,'%Y-%m-%d') = DATE_FORMAT("+signUpDate+",'%Y-%m-%d')";
+        int signUp = 0;
+        try{
+            signUp = jdbcTemplate.queryForObject(sql,Integer.class);
+        }catch (Exception e){
+            throw new Exception(e);
+        }
+        return signUp;
     }
 
 }

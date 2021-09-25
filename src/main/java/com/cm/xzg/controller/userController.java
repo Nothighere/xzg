@@ -2,6 +2,8 @@ package com.cm.xzg.controller;
 
 import com.cm.xzg.bean.UserDo;
 import com.cm.xzg.service.UserService;
+import lombok.extern.slf4j.XSlf4j;
+import org.slf4j.ILoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -12,8 +14,13 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
+
 public class userController {
     @Autowired
     private UserService userService;
@@ -26,6 +33,29 @@ public class userController {
                 return ResponseEntity.ok(error.getDefaultMessage());
             }
         }
+        DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDateTime signUpDate = user.getRegeisteDate();
+        String signUpDateStr = df.format(signUpDate);
+        // 查看是否到达报名上限
+        if (!userService.isOutOfLimit(signUpDateStr)){
+            return ResponseEntity.ok().body("选定日期内名额已满！");
+        }
         return ResponseEntity.ok().body(userService.add(user));
     }
+
+
+    @PostMapping("/getAllUsers")
+    @ResponseBody
+    public ResponseEntity<List<UserDo>> getAllUsers(){
+        List <UserDo> resList = new ArrayList<>();
+        try {
+            resList = userService.getAllUsers();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseEntity.ok().body(resList);
+    }
+
+
+
 }
